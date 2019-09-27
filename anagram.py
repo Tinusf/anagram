@@ -1,3 +1,6 @@
+import time
+
+
 def read_file(path):
     """
     :param path: The path to the file.
@@ -14,6 +17,8 @@ def sort_words(word_list):
     :return: The same length list and every word is still at the same index however the words
     are sorted alphabetically.
     """
+    # TODO: A faster thing here would be to just count the number of chars. Instead of fully
+    #  sorting it.
     return ["".join(sorted(word)) for word in word_list]
 
 
@@ -38,16 +43,13 @@ def find_anagram(word_list):
 
         current_anagram = []
         for j in range(len(word_list)):
-            if j == i:
-                # Skip the same word.
-                continue
             # If the sorted words are equal then they are anagrams.
             if current_sorted_word == word_list_sorted[j]:
                 # Append the non-sorted word.
                 current_anagram.append(word_list[j])
-        # If any anagrams was found.
-        if len(current_anagram) > 0:
-            current_anagram.insert(0, word_list[i])
+        # Check if any anagrams was found. This always finds one (the same word) so we need to
+        # check if we found more than 1.
+        if len(current_anagram) > 1:
             anagrams.append(current_anagram)
     return anagrams
 
@@ -57,8 +59,10 @@ def main():
     #  multiple anagrams at the same time.
     # Read the eventyr.txt file.
     word_list = read_file("eventyr.txt")
-
+    start = time.time()
     anagrams = find_anagram(word_list)
+    end = time.time()
+    print(end - start)  # Takes about 0.12199807167053223.
     for anagram in anagrams:
         print(", ".join(anagram))
 
