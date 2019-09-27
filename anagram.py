@@ -22,6 +22,20 @@ def sort_words(word_list):
     return ["".join(sorted(word)) for word in word_list]
 
 
+def simple_ord(char):
+    if char == "æ":
+        return 26
+    if char == "ø":
+        return 27
+    if char == "å":
+        return 28
+    if char == "ó":
+        return 29
+    if char == "é":
+        return 30
+    return ord(char) - 97
+
+
 def find_anagram_dictionary(word_list):
     """
     Takes about 0.00099945068359375 to run.
@@ -38,8 +52,13 @@ def find_anagram_dictionary(word_list):
     anagrams = {}
     for word in word_list:
         # Get the sorted word.
-        sorted_word = "".join(sorted(word))
+        # sorted_word = "".join(sorted(word))
+        sorted_word = [0] * 31
+        for char in word:
+            ord = simple_ord(char)
+            sorted_word[ord] += 1
         # Check if this word has been seen already.
+        sorted_word = str(sorted_word)
         if sorted_word in anagrams:
             # Already been seen then just append the word.
             anagrams[sorted_word].append(word)
