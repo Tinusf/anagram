@@ -22,8 +22,38 @@ def sort_words(word_list):
     return ["".join(sorted(word)) for word in word_list]
 
 
-def find_anagram(word_list):
+def find_anagram_dictionary(word_list):
     """
+    Takes about 0.00099945068359375 to run.
+    This method is O(n). And works by going through the word_list once and sorting that word and
+    checking if the dictionary already contains this sorted words as a key, in that case append
+    the unsorted word in the list, otherwise create a new list with the unsorted word as the
+    only value. In the end it iterates through the whole list and only keeps the anagrams with a
+    list containing of more than 1 word.
+    :param word_list: A list containing many words.
+    :return: A list containing all the anagrams. Example: [["listen", "silent"]]
+    """
+    # A dictionary with the key being a sorted word and the value being all the unsorted words
+    # with the same sorted words.
+    anagrams = {}
+    for word in word_list:
+        # Get the sorted word.
+        sorted_word = "".join(sorted(word))
+        # Check if this word has been seen already.
+        if sorted_word in anagrams:
+            # Already been seen then just append the word.
+            anagrams[sorted_word].append(word)
+        else:
+            # Not been seen then we need to create a new list containing the new word.
+            anagrams[sorted_word] = [word]
+    # Only return the anagrams that have a list containing more than 1 word.
+    return [anagram for anagram in anagrams.values() if (len(anagram) > 1)]
+
+
+def find_anagram_naive(word_list):
+    """
+    This is a slow straightforward method. O(n^2).
+    Takes about 0.12199807167053223 seconds.
     :param word_list: A list containing many words.
     :return: A list containing all the anagrams. Example: [["listen", "silent"]]
     """
@@ -55,14 +85,12 @@ def find_anagram(word_list):
 
 
 def main():
-    # TODO: after you have used one word you can safely remove it, it's impossible to be in
-    #  multiple anagrams at the same time.
     # Read the eventyr.txt file.
     word_list = read_file("eventyr.txt")
     start = time.time()
-    anagrams = find_anagram(word_list)
+    anagrams = find_anagram_dictionary(word_list)
     end = time.time()
-    print(end - start)  # Takes about 0.12199807167053223.
+    print("Finding the anagrams took", end - start, "seconds.")
     for anagram in anagrams:
         print(", ".join(anagram))
 
